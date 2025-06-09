@@ -24,61 +24,53 @@ public partial class ScriptExecutionWindow : Window
 
     private void BuildInputs()
     {
-        try
-        {
-            var inputs = _info.Definition?["inputs"] as JArray;
-            if (inputs == null)
-                return;
 
-            foreach (var item in inputs)
+
+        var inputs = _info.Definition?["inputs"] as JArray;
+        if (inputs == null) return;
+        foreach (var item in inputs)
+        {
+            var labelText = item.Value<string>("label") ?? item.Value<string>("name");
+            var name = item.Value<string>("name") ?? string.Empty;
+            var type = item.Value<string>("ControlType")?.ToLower();
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(type)) continue;
+
+            var label = new TextBlock { Text = labelText, Margin = new Thickness(0,5,0,0) };
+            InputsPanel.Children.Add(label);
+
+            Control? control = null;
+            switch (type)
             {
-                var labelText = item.Value<string>("label") ?? item.Value<string>("name");
-                var name = item.Value<string>("name") ?? string.Empty;
-                var type = item.Value<string>("ControlType")?.ToLower();
-                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(type))
-                    continue;
-
-                var label = new TextBlock { Text = labelText, Margin = new Thickness(0,5,0,0) };
-                InputsPanel.Children.Add(label);
-
-                Control? control = null;
-                switch (type)
-                {
-                    case "textbox":
-                        control = new TextBox { Text = item.Value<string>("default") ?? string.Empty };
-                        break;
-                    case "checkedlistbox":
-                        var lb = new ListBox { SelectionMode = SelectionMode.Multiple, Height = 100 };
-                        foreach (var choice in item["items"] as JArray ?? new JArray())
-                        {
-                            var chk = new CheckBox { Content = choice["Label"]?.ToString() ?? choice.ToString(), Tag = choice["ID"]?.ToString() };
-                            lb.Items.Add(chk);
-                        }
-                        control = lb;
-                        break;
-                    case "combobox":
-                        var cb = new ComboBox();
-                        foreach (var choice in item["items"] as JArray ?? new JArray())
-                        {
-                            cb.Items.Add(choice.ToString());
-                        }
-                        cb.SelectedIndex = 0;
-                        control = cb;
-                        break;
-                    case "datetimepicker":
-                        control = new DatePicker();
-                        break;
-                }
-                if (control != null)
-                {
-                    _controls[name] = control;
-                    InputsPanel.Children.Add(control);
-                }
+                case "textbox":
+                    control = new TextBox { Text = item.Value<string>("default") ?? string.Empty };
+                    break;
+                case "checkedlistbox":
+                    var lb = new ListBox { SelectionMode = SelectionMode.Multiple, Height = 100 };
+                    foreach (var choice in item["items"] as JArray ?? new JArray())
+                    {
+                        var chk = new CheckBox { Content = choice["Label"]?.ToString() ?? choice.ToString(), Tag = choice["ID"]?.ToString() };
+                        lb.Items.Add(chk);
+                    }
+                    control = lb;
+                    break;
+                case "combobox":
+                    var cb = new ComboBox();
+                    foreach (var choice in item["items"] as JArray ?? new JArray())
+                    {
+                        cb.Items.Add(choice.ToString());
+                    }
+                    cb.SelectedIndex = 0;
+                    control = cb;
+                    break;
+                case "datetimepicker":
+                    control = new DatePicker();
+                    break;
             }
-        }
-        catch
-        {
-            // ignore malformed definition
+            if (control != null)
+            {
+                _controls[name] = control;
+                InputsPanel.Children.Add(control);
+            }
         }
     }
 

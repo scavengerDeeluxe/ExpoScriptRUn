@@ -22,6 +22,7 @@ namespace UiDesktopApp1.ViewModels.Pages
         {
             _repo = repo;
             LoadScriptsAsync();
+
         }
 
         private async void LoadScriptsAsync()
@@ -37,7 +38,6 @@ namespace UiDesktopApp1.ViewModels.Pages
             {
                 MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
 
         [RelayCommand]
         private void RunScript()

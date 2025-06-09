@@ -82,20 +82,7 @@ namespace UiDesktopApp1.ViewModels.Pages
         {
             if (string.IsNullOrWhiteSpace(RepositoryUrl))
             {
-                System.Windows.MessageBox.Show(
-                    "Repository URL cannot be empty.",
-                    "Error",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Error);
-                return;
-            }
 
-            _config.Config.ScriptRepository = RepositoryUrl;
-            _config.Save();
-
-            try
-            {
-                await _repo.GetScriptsAsync();
                 System.Windows.MessageBox.Show(
                     "Repository updated.",
                     "Settings",
@@ -110,6 +97,13 @@ namespace UiDesktopApp1.ViewModels.Pages
                     System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Error);
             }
+                Wpf.Ui.Controls.Snackbar.Show("Settings", "Repository updated.");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+            await _repo.GetScriptsAsync();
         }
     }
 }
