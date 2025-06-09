@@ -1,0 +1,3 @@
+psexec -s \\$computername cmd /c winrm qc /force
+$newPSSession = New-PSsession -computername $computername -authorization Negotiate
+invoke-command -session $newsession -scriptblock { invoke-expression cmd /c mkdir C:\intel2 -force}
