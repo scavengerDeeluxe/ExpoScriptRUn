@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UiDesktopApp1.Services;
 
 namespace UiDesktopApp1.ViewModels.Pages
@@ -8,6 +9,7 @@ namespace UiDesktopApp1.ViewModels.Pages
     public partial class DashboardViewModel : ObservableObject
     {
         private readonly PowerShellService _ps;
+        private readonly HistoryService _history;
 
         public ObservableCollection<string> Scripts { get; } = new();
         public ObservableCollection<ScriptParameter> Parameters { get; } = new();
@@ -18,9 +20,10 @@ namespace UiDesktopApp1.ViewModels.Pages
         [ObservableProperty]
         private string _log = string.Empty;
 
-        public DashboardViewModel(PowerShellService ps)
+        public DashboardViewModel(PowerShellService ps, HistoryService history)
         {
             _ps = ps;
+            _history = history;
             LoadScripts();
         }
 
@@ -47,7 +50,17 @@ namespace UiDesktopApp1.ViewModels.Pages
                 return;
 
             Log = $"Running {SelectedScript}...\n";
-            Log += await _ps.RunScriptAsync(SelectedScript, Parameters);
+            var output = await _ps.RunScriptAsync(SelectedScript, Parameters);
+            Log += output;
+
+            var entry = new Models.HistoryEntry
+            {
+                RunAt = DateTime.Now,
+                ScriptName = SelectedScript,
+                Parameters = string.Join("; ", Parameters.Select(p => $"{p.Name}={p.Value}")),
+                Output = output
+            };
+            _history.AddEntry(entry);
         }
 
         [RelayCommand]

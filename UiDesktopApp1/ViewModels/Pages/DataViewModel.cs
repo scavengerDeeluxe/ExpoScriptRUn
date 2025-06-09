@@ -1,5 +1,6 @@
-﻿using System.Windows.Media;
+using System.Collections.ObjectModel;
 using UiDesktopApp1.Models;
+using UiDesktopApp1.Services;
 using Wpf.Ui.Abstractions.Controls;
 
 namespace UiDesktopApp1.ViewModels.Pages
@@ -7,9 +8,15 @@ namespace UiDesktopApp1.ViewModels.Pages
     public partial class DataViewModel : ObservableObject, INavigationAware
     {
         private bool _isInitialized = false;
+        private readonly HistoryService _history;
 
         [ObservableProperty]
-        private IEnumerable<DataColor> _colors;
+        private ObservableCollection<HistoryEntry> _entries = new();
+
+        public DataViewModel(HistoryService history)
+        {
+            _history = history;
+        }
 
         public Task OnNavigatedToAsync()
         {
@@ -23,27 +30,13 @@ namespace UiDesktopApp1.ViewModels.Pages
 
         private void InitializeViewModel()
         {
-            var random = new Random();
-            var colorCollection = new List<DataColor>();
-
-            for (int i = 0; i < 8192; i++)
-                colorCollection.Add(
-                    new DataColor
-                    {
-                        Color = new SolidColorBrush(
-                            Color.FromArgb(
-                                (byte)200,
-                                (byte)random.Next(0, 250),
-                                (byte)random.Next(0, 250),
-                                (byte)random.Next(0, 250)
-                            )
-                        )
-                    }
-                );
-
-            Colors = colorCollection;
-
+            Entries = new ObservableCollection<HistoryEntry>(_history.Entries);
             _isInitialized = true;
+        }
+
+        public void Save()
+        {
+            _history.SaveChanges();
         }
     }
 }
