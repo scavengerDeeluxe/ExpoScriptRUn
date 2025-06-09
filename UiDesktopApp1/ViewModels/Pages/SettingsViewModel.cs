@@ -80,12 +80,23 @@ namespace UiDesktopApp1.ViewModels.Pages
         [RelayCommand]
         private async Task SaveRepositoryAsync()
         {
-            _config.Config.ScriptRepository = RepositoryUrl;
-            _config.Save();
-
-            try
+            if (string.IsNullOrWhiteSpace(RepositoryUrl))
             {
-                await _repo.GetScriptsAsync();
+
+                System.Windows.MessageBox.Show(
+                    "Repository updated.",
+                    "Settings",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(
+                    $"Failed to load scripts: {ex.Message}",
+                    "Error",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+            }
                 Wpf.Ui.Controls.Snackbar.Show("Settings", "Repository updated.");
             }
             catch (Exception ex)

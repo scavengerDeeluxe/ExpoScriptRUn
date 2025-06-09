@@ -24,6 +24,8 @@ public partial class ScriptExecutionWindow : Window
 
     private void BuildInputs()
     {
+
+
         var inputs = _info.Definition?["inputs"] as JArray;
         if (inputs == null) return;
         foreach (var item in inputs)

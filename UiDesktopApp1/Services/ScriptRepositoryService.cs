@@ -1,5 +1,8 @@
-using System.Net.Http;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 using Newtonsoft.Json.Linq;
 using UiDesktopApp1.Models;
 
@@ -20,7 +23,7 @@ public class ScriptRepositoryService
     public async Task<IEnumerable<ScriptInfo>> GetScriptsAsync()
     {
         var results = new List<ScriptInfo>();
-
+      
         try
         {
             var response = await _httpClient.GetStringAsync(_config.Config.ScriptRepository);
@@ -58,6 +61,7 @@ public class ScriptRepositoryService
         catch (Exception ex)
         {
             throw new InvalidOperationException($"Unable to load scripts from '{_config.Config.ScriptRepository}'", ex);
+/*
         var response = await _httpClient.GetStringAsync(_config.Config.ScriptRepository);
         var files = JArray.Parse(response);
         foreach (var file in files)
@@ -88,7 +92,8 @@ public class ScriptRepositoryService
             }
 
             results.Add(scriptInfo);
-        }
+*/
+       }
 
         return results;
     }
