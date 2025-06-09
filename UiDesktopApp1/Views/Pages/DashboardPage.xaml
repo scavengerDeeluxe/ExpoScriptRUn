@@ -14,24 +14,12 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
             <TextBlock Text="Select script:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <ComboBox Width="200" ItemsSource="{Binding ViewModel.Scripts}" SelectedItem="{Binding ViewModel.SelectedScript, Mode=TwoWay}"/>
-            <Button Content="Get Help" Margin="10,0,0,0" Command="{Binding ViewModel.ShowHelpCommand}"/>
+            <ComboBox Width="200" ItemsSource="{Binding ViewModel.Scripts}" SelectedItem="{Binding ViewModel.SelectedScript, Mode=TwoWay}" DisplayMemberPath="Name"/>
             <Button Content="Run" Margin="10,0,0,0" Command="{Binding ViewModel.RunScriptCommand}"/>
         </StackPanel>
-
-        <DataGrid Grid.Row="1" ItemsSource="{Binding ViewModel.Parameters}" AutoGenerateColumns="False" Margin="0,0,0,10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Parameter" Binding="{Binding Name}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <TextBox Grid.Row="2" Text="{Binding ViewModel.Log}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
     </Grid>
 </Page>

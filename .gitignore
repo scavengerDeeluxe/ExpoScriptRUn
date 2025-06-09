@@ -1,0 +1,5 @@
+# Ignore build outputs
+UiDesktopApp1/bin/
+UiDesktopApp1/obj/
+scriptmaster/
+master.zip
