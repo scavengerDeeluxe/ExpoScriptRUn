@@ -1,5 +1,6 @@
 ﻿using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using UiDesktopApp1.Services;
 
 namespace UiDesktopApp1.ViewModels.Pages
@@ -81,6 +82,16 @@ namespace UiDesktopApp1.ViewModels.Pages
         {
             _config.Config.ScriptRepository = RepositoryUrl;
             _config.Save();
+
+            try
+            {
+                await _repo.GetScriptsAsync();
+                Wpf.Ui.Controls.Snackbar.Show("Settings", "Repository updated.");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
             await _repo.GetScriptsAsync();
         }
     }
