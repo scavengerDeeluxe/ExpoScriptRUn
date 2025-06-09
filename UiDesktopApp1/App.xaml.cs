@@ -48,8 +48,8 @@ namespace UiDesktopApp1
 
                 services.AddSingleton<ConfigService>();
                 services.AddSingleton<HistoryService>();
+                services.AddSingleton<ScriptRepositoryService>();
                 services.AddSingleton<DashboardPage>();
-                services.AddSingleton<PowerShellService>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
                 services.AddSingleton<DataViewModel>();

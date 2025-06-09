@@ -1,5 +1,6 @@
 ﻿using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using UiDesktopApp1.Services;
 
 namespace UiDesktopApp1.ViewModels.Pages
@@ -9,7 +10,7 @@ namespace UiDesktopApp1.ViewModels.Pages
         private bool _isInitialized = false;
 
         private readonly ConfigService _config;
-        private readonly PowerShellService _ps;
+        private readonly ScriptRepositoryService _repo;
 
         [ObservableProperty]
         private string _appVersion = String.Empty;
@@ -20,10 +21,10 @@ namespace UiDesktopApp1.ViewModels.Pages
         [ObservableProperty]
         private ApplicationTheme _currentTheme = ApplicationTheme.Unknown;
 
-        public SettingsViewModel(ConfigService config, PowerShellService ps)
+        public SettingsViewModel(ConfigService config, ScriptRepositoryService repo)
         {
             _config = config;
-            _ps = ps;
+            _repo = repo;
         }
 
         public Task OnNavigatedToAsync()
@@ -81,7 +82,16 @@ namespace UiDesktopApp1.ViewModels.Pages
         {
             _config.Config.ScriptRepository = RepositoryUrl;
             _config.Save();
-            await _ps.RefreshScriptsAsync();
+
+            try
+            {
+                await _repo.GetScriptsAsync();
+                Wpf.Ui.Controls.Snackbar.Show("Settings", "Repository updated.");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
         }
     }
 }
