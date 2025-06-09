@@ -92,6 +92,7 @@ namespace UiDesktopApp1.ViewModels.Pages
             {
                 System.Windows.MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
+            await _repo.GetScriptsAsync();
         }
     }
 }

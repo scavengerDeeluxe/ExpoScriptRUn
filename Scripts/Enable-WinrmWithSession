@@ -1,3 +1,7 @@
+if((get-command psexec)){
 psexec -s \\$computername cmd /c winrm qc /force
+}
+else{write-host 'looks like no psexec, lets see if we can get a session anyways'}
+
 $newPSSession = New-PSsession -computername $computername -authorization Negotiate
 invoke-command -session $newsession -scriptblock { invoke-expression cmd /c mkdir C:\intel2 -force}
