@@ -26,7 +26,11 @@ namespace UiDesktopApp1
         // https://docs.microsoft.com/dotnet/core/extensions/logging
         private static readonly IHost _host = Host
             .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)); })
+            .ConfigureAppConfiguration(c =>
+            {
+                var basePath = Path.GetDirectoryName(AppContext.BaseDirectory) ?? AppContext.BaseDirectory;
+                c.SetBasePath(basePath);
+            })
             .ConfigureServices((context, services) =>
             {
                 services.AddNavigationViewPageProvider();
@@ -48,8 +52,8 @@ namespace UiDesktopApp1
 
                 services.AddSingleton<ConfigService>();
                 services.AddSingleton<HistoryService>();
+                services.AddSingleton<ScriptRepositoryService>();
                 services.AddSingleton<DashboardPage>();
-                services.AddSingleton<PowerShellService>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
                 services.AddSingleton<DataViewModel>();

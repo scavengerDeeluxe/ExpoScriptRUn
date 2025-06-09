@@ -2,74 +2,53 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using UiDesktopApp1.Services;
+using UiDesktopApp1.Models;
 
 namespace UiDesktopApp1.ViewModels.Pages
 {
     public partial class DashboardViewModel : ObservableObject
     {
-        private readonly PowerShellService _ps;
-        private readonly HistoryService _history;
+        private readonly ScriptRepositoryService _repo;
 
-        public ObservableCollection<string> Scripts { get; } = new();
-        public ObservableCollection<ScriptParameter> Parameters { get; } = new();
+        public ObservableCollection<ScriptInfo> Scripts { get; } = new();
 
         [ObservableProperty]
-        private string? _selectedScript;
+        private ScriptInfo? _selectedScript;
 
-        [ObservableProperty]
-        private string _log = string.Empty;
-
-        public DashboardViewModel(PowerShellService ps, HistoryService history)
+        public DashboardViewModel(ScriptRepositoryService repo)
         {
-            _ps = ps;
-            _history = history;
-            LoadScripts();
+            _repo = repo;
+            LoadScriptsAsync();
         }
 
-        private void LoadScripts()
+        private async void LoadScriptsAsync()
         {
             Scripts.Clear();
-            foreach (var script in _ps.ListScripts())
-                Scripts.Add(script);
-        }
-
-        partial void OnSelectedScriptChanged(string? value)
-        {
-            Parameters.Clear();
-            if (value == null)
-                return;
-            foreach (var p in _ps.GetParameters(value))
-                Parameters.Add(p);
-        }
-
-        [RelayCommand]
-        private async Task RunScriptAsync()
-        {
-            if (SelectedScript == null)
-                return;
-
-            Log = $"Running {SelectedScript}...\n";
-            var output = await _ps.RunScriptAsync(SelectedScript, Parameters);
-            Log += output;
-
-            var entry = new Models.HistoryEntry
+            try
             {
-                RunAt = DateTime.Now,
-                ScriptName = SelectedScript,
-                Parameters = string.Join("; ", Parameters.Select(p => $"{p.Name}={p.Value}")),
-                Output = output
-            };
-            _history.AddEntry(entry);
+                var data = await _repo.GetScriptsAsync();
+                foreach (var s in data)
+                    Scripts.Add(s);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load scripts: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         [RelayCommand]
-        private async Task ShowHelpAsync()
+        private void RunScript()
         {
             if (SelectedScript == null)
                 return;
 
-            Log = await _ps.GetHelpAsync(SelectedScript);
+            var win = new Views.Windows.ScriptExecutionWindow(SelectedScript);
+            win.Owner = Application.Current.MainWindow;
+            win.ShowDialog();
         }
+
     }
 }
