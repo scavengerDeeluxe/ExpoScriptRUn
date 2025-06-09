@@ -1,0 +1,94 @@
+{
+  "format": 1,
+  "restore": {
+    "W:\\Users\\scav\\source\\repos\\UiDesktopApp1\\UiDesktopApp1\\UiDesktopApp1.csproj": {}
+  },
+  "projects": {
+    "W:\\Users\\scav\\source\\repos\\UiDesktopApp1\\UiDesktopApp1\\UiDesktopApp1.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "W:\\Users\\scav\\source\\repos\\UiDesktopApp1\\UiDesktopApp1\\UiDesktopApp1.csproj",
+        "projectName": "UiDesktopApp1",
+        "projectPath": "W:\\Users\\scav\\source\\repos\\UiDesktopApp1\\UiDesktopApp1\\UiDesktopApp1.csproj",
+        "packagesPath": "W:\\Users\\scav\\.nuget\\packages\\",
+        "outputPath": "W:\\Users\\scav\\source\\repos\\UiDesktopApp1\\UiDesktopApp1\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "W:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "W:\\Users\\scav\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "W:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "W:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-windows"
+        ],
+        "sources": {
+          "W:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
+            "WPF-UI": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
+            "WPF-UI.DependencyInjection": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "W:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
