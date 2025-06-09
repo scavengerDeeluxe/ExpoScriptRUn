@@ -14,11 +14,42 @@ namespace UiDesktopApp1.Services
     public class PowerShellService
     {
         private readonly string _scriptDirectory;
+        private readonly ConfigService _config;
 
-        public PowerShellService()
+        public PowerShellService(ConfigService config)
         {
+            _config = config;
             _scriptDirectory = Path.Combine(AppContext.BaseDirectory, "Scripts");
             Directory.CreateDirectory(_scriptDirectory);
+            _ = RefreshScriptsAsync();
+        }
+
+        public async Task RefreshScriptsAsync()
+        {
+            try
+            {
+                using var http = new HttpClient();
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("App");
+                var json = await http.GetStringAsync(_config.Config.ScriptRepository);
+                var doc = System.Text.Json.JsonDocument.Parse(json);
+                foreach (var item in doc.RootElement.EnumerateArray())
+                {
+                    if (item.TryGetProperty("name", out var nameEl) && nameEl.GetString()!.EndsWith(".ps1"))
+                    {
+                        var downloadUrl = item.GetProperty("download_url").GetString();
+                        if (!string.IsNullOrEmpty(downloadUrl))
+                        {
+                            var content = await http.GetStringAsync(downloadUrl);
+                            var path = Path.Combine(_scriptDirectory, nameEl.GetString()!);
+                            await File.WriteAllTextAsync(path, content);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // ignore errors
+            }
         }
 
         public IEnumerable<string> ListScripts()

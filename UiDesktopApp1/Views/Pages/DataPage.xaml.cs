@@ -14,5 +14,10 @@ namespace UiDesktopApp1.Views.Pages
 
             InitializeComponent();
         }
+
+        private void DataGrid_CellEditEnding(object sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+        {
+            ViewModel.Save();
+        }
     }
 }

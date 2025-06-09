@@ -1,5 +1,6 @@
 ﻿using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
+using UiDesktopApp1.Services;
 
 namespace UiDesktopApp1.ViewModels.Pages
 {
@@ -7,11 +8,23 @@ namespace UiDesktopApp1.ViewModels.Pages
     {
         private bool _isInitialized = false;
 
+        private readonly ConfigService _config;
+        private readonly PowerShellService _ps;
+
         [ObservableProperty]
         private string _appVersion = String.Empty;
 
         [ObservableProperty]
+        private string _repositoryUrl = string.Empty;
+
+        [ObservableProperty]
         private ApplicationTheme _currentTheme = ApplicationTheme.Unknown;
+
+        public SettingsViewModel(ConfigService config, PowerShellService ps)
+        {
+            _config = config;
+            _ps = ps;
+        }
 
         public Task OnNavigatedToAsync()
         {
@@ -27,6 +40,7 @@ namespace UiDesktopApp1.ViewModels.Pages
         {
             CurrentTheme = ApplicationThemeManager.GetAppTheme();
             AppVersion = $"UiDesktopApp1 - {GetAssemblyVersion()}";
+            RepositoryUrl = _config.Config.ScriptRepository;
 
             _isInitialized = true;
         }
@@ -60,6 +74,14 @@ namespace UiDesktopApp1.ViewModels.Pages
 
                     break;
             }
+        }
+
+        [RelayCommand]
+        private async Task SaveRepositoryAsync()
+        {
+            _config.Config.ScriptRepository = RepositoryUrl;
+            _config.Save();
+            await _ps.RefreshScriptsAsync();
         }
     }
 }
