@@ -47,6 +47,7 @@ namespace UiDesktopApp1
                 services.AddSingleton<MainWindowViewModel>();
 
                 services.AddSingleton<DashboardPage>();
+                services.AddSingleton<PowerShellService>();
                 services.AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>();
                 services.AddSingleton<DataViewModel>();
